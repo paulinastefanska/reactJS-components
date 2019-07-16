@@ -1,3 +1,5 @@
+"use srtict";
+
 var movies = [
   {
     id: 1,
@@ -37,18 +39,80 @@ var movies = [
   }
 ];
 
-var moviesElements = movies.map(function(movie) {
-  return React.createElement('li', {key: movie.id},
-      React.createElement('h2', {}, movie.title),
-      React.createElement('p', {}, movie.desc),
-      React.createElement("img", {src: movie.img},)
-    );
+var Movie = React.createClass({ // class make
+  propTypes: {
+    movie: React.PropTypes.object.isRequired,
+  },
+
+  render: function() {
+    return (
+      React.createElement("li", {}, 
+        React.createElement(MovieTitle, {title: this.props.movie.title}),
+        React.createElement(MovieImage, {image: this.props.movie.img}),
+        React.createElement(MovieDescription, {title: this.props.movie.desc})
+      )
+    )
+  },
 });
+
+var MovieTitle = React.createClass({
+  propTypes: {
+    title: React.PropTypes.string.isRequired,
+  },
+
+  render: function() {
+    return (
+      React.createElement("h2", {}, this.props.title)
+    )
+  },
+});
+
+var MovieImage = React.createClass({
+  propTypes: {
+    image: React.PropTypes.object.isRequired,
+  },
+
+  render: function() {
+    return (
+      React.createElement("img", {src: this.props.image})
+    )
+  },
+});
+
+var MovieDescription = React.createClass({
+  propTypes: {
+    title: React.PropTypes.string.isRequired,
+  },
+
+  render: function() {
+    return (
+      React.createElement("p", {}, this.props.title)
+    )
+  },
+});
+
+var Movies = React.createClass({
+  propTypes: {
+    movies: React.PropTypes.array.isRequired,
+  },
+
+  render: function() {
+    var movieElement = this.props.movies.map(function(movie) {
+      return React.createElement(Movie, {
+        key: movie.id,
+        movie: movie
+      })
+    });
+
+    return React.createElement("ul", {}, movieElement)
+  }
+});
+
 
 var element =
   React.createElement('div', {},
     React.createElement('h1', {}, 'The Best NETFLIX Series:'),
-    React.createElement('ul', {}, moviesElements)
+    React.createElement(Movies, {movies: movies})
   );
 
 ReactDOM.render(element, document.getElementById('app'));
